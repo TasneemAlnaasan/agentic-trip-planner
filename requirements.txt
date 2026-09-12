@@ -1,0 +1,7 @@
+streamlit
+langgraph
+langchain-groq
+groq
+requests
+tavily-python
+python-dotenv
