@@ -9,7 +9,6 @@ client = TavilyClient(api_key)
 
 def search_prices(query, max_results=3):
     """
-    يبحث عن معلومات تقريبية (أسعار، تكاليف) عبر الويب
     Searches the web for approximate info (prices, costs)
     """
     response = client.search(query, max_results=max_results)
