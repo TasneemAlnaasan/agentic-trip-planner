@@ -1,10 +1,7 @@
-import os
-from dotenv import load_dotenv
+from config import settings
 from tavily import TavilyClient
 
-load_dotenv()
-api_key = os.getenv("TAVILY_API_KEY")
-client = TavilyClient(api_key)
+client = TavilyClient(settings.tavily_api_key)
 
 
 def search_prices(query, max_results=3):

@@ -1,9 +1,6 @@
-import os
-import requests
-from dotenv import load_dotenv
 
-load_dotenv()
-api_key = os.getenv("GEOAPIFY_API_KEY")
+import requests
+from config import settings
 
 
 def get_places(latitude, longitude, radius=5000, limit=10):
@@ -23,7 +20,7 @@ def get_places(latitude, longitude, radius=5000, limit=10):
         "categories": categories,
         "filter": filter_string,
         "limit": limit,
-        "apiKey": api_key,
+        "apiKey": settings.geoapify_api_key,
     }
 
     response = requests.get(url, params=params)

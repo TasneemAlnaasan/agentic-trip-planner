@@ -1,9 +1,8 @@
-import os
-import requests
-from dotenv import load_dotenv
 
-load_dotenv()
-api_key = os.getenv("GEOAPIFY_API_KEY")
+import requests
+from config import settings
+
+api_key=settings.geoapify_api_key
 
 
 def get_coordinates(place_name):

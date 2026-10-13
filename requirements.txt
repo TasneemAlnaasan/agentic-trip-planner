@@ -5,3 +5,4 @@ groq
 requests
 tavily-python
 python-dotenv
+pydantic-settings
