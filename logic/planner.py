@@ -93,6 +93,7 @@ def run_planner(user_query):
 
     step_count = 0
     max_steps = 10
+    collected_data = {}
 
     response = client.chat.completions.create(
         model="openai/gpt-oss-120b",
@@ -112,6 +113,8 @@ def run_planner(user_query):
             function_to_call = available_functions[function_name]
             result = function_to_call(**function_args)
 
+            collected_data[function_name] = result
+
             messages.append({
                 "role": "tool",
                 "tool_call_id": tool_call.id,
@@ -128,10 +131,12 @@ def run_planner(user_query):
         response_message = new_response.choices[0].message
         step_count += 1
 
-    return response_message
+    return response_message.content, collected_data
 
 
 if __name__ == "__main__":
     query = "Plan a 3-day trip to Petra"
-    result = run_planner(query)
-    print(result.content)
+    final_text, data = run_planner(query)
+    print(final_text)
+    print("\n--- Collected data ---")
+    print(data)
