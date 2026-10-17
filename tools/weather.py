@@ -1,10 +1,7 @@
 import requests
 
-
 def code_to_condition(code):
-    """
-    Translate a WMO weather code into a readable condition string
-    """
+ 
     if code == 0:
         return "clear"
     elif code in [1, 2, 3]:
@@ -24,10 +21,12 @@ def code_to_condition(code):
 
 
 def get_weather(latitude, longitude, days=3):
-    """
-    Fetches the weather forecast for a location, cleaned up and ready for the model
-    """
+ 
     url = "https://api.open-meteo.com/v1/forecast"
+
+    max_forecast_days = 16
+    days = min(days, max_forecast_days)
+
     params = {
         "latitude": latitude,
         "longitude": longitude,
@@ -38,10 +37,15 @@ def get_weather(latitude, longitude, days=3):
 
     response = requests.get(url, params=params)
     data = response.json()
+
+    if "daily" not in data:
+        return []
+
     daily = data["daily"]
 
-    # build a clean list, one entry per day
-    result = []
+   
+    
+    result = [ ]
     for date, temp_max, temp_min, code in zip(
         daily["time"], daily["temperature_2m_max"], daily["temperature_2m_min"], daily["weathercode"]
     ):

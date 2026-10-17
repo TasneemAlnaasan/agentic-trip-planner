@@ -6,7 +6,6 @@ from tools.places import get_places
 from tools.search import search_prices
 from tools.geocode import get_coordinates
 
-
 get_weather_schema = {
     "type": "function",
     "function": {
@@ -75,6 +74,7 @@ get_coordinates_schema = {
 tools = [get_weather_schema, get_places_schema, search_prices_schema, get_coordinates_schema]
 
 
+
 available_functions = {
     "get_weather": get_weather,
     "get_places": get_places,
@@ -109,6 +109,18 @@ def run_planner(user_query):
         for tool_call in response_message.tool_calls:
             function_name = tool_call.function.name
             function_args = json.loads(tool_call.function.arguments)
+
+        
+            if function_name not in available_functions:
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "name": function_name,
+                    "content": json.dumps({
+                        "error": f"Tool '{function_name}' does not exist. Please use one of the available tools."
+                    })
+                })
+                continue
 
             function_to_call = available_functions[function_name]
             result = function_to_call(**function_args)

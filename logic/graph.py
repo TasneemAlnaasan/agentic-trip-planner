@@ -1,3 +1,4 @@
+import time
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 from config import settings
@@ -91,6 +92,7 @@ graph = graph_builder.compile()
 
 
 def plan_trip_streaming(user_query):
+   
     initial_state = {
         "user_query": user_query,
         "itinerary_text": "",
@@ -100,6 +102,8 @@ def plan_trip_streaming(user_query):
     }
 
     for step in graph.stream(initial_state):
+        node_name = list(step.keys())[0]
+        print(f"[{time.strftime('%H:%M:%S')}] Node finished: {node_name}")
         yield step
 
 
