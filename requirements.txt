@@ -7,3 +7,4 @@ tavily-python
 python-dotenv
 pydantic-settings
 langgraph
+streamlit

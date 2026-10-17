@@ -18,9 +18,10 @@ def basic_check(collected_data):
     return True, "All required data is present"
 
 
-def model_judgment(itinerary_text, trip_duration_days):
+def model_judgment(itinerary_text):
     system_prompt = (
         "You judge whether a trip itinerary is sufficient and consistent. "
+        "Infer the number of days planned directly from the itinerary text. "
         "Check if the suggested places for each day are close to each other, "
         "if the number of suggested places for each day is sufficient, "
         "and if the provided prices relate to the specified place. "
@@ -30,7 +31,7 @@ def model_judgment(itinerary_text, trip_duration_days):
 
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Trip duration: {trip_duration_days} days\nItinerary text: {itinerary_text}"}
+        {"role": "user", "content": f"Itinerary text: {itinerary_text}"}
     ]
 
     response = client.chat.completions.create(
@@ -44,11 +45,11 @@ def model_judgment(itinerary_text, trip_duration_days):
     return result
 
 
-def evaluate(collected_data, itinerary_text, trip_duration_days):
+def evaluate(collected_data, itinerary_text):
     gate_passed, gate_reason = basic_check(collected_data)
 
     if not gate_passed:
         return {"is_sufficient": False, "reason": gate_reason}
 
-    judgment = model_judgment(itinerary_text, trip_duration_days)
+    judgment = model_judgment(itinerary_text)
     return judgment

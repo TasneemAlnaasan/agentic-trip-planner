@@ -7,7 +7,6 @@ from logic.evaluator import evaluate
 
 class TripState(TypedDict):
     user_query: str
-    trip_duration_days: int
     itinerary_text: str
     collected_data: dict
     evaluation: dict
@@ -26,8 +25,7 @@ def planner_node(state: TripState):
 def evaluator_node(state: TripState):
     evaluation = evaluate(
         state["collected_data"],
-        state["itinerary_text"],
-        state["trip_duration_days"]
+        state["itinerary_text"]
     )
 
     return {
@@ -92,10 +90,9 @@ graph_builder.add_edge("final_composer", END)
 graph = graph_builder.compile()
 
 
-def plan_trip_streaming(user_query, trip_duration_days):
+def plan_trip_streaming(user_query):
     initial_state = {
         "user_query": user_query,
-        "trip_duration_days": trip_duration_days,
         "itinerary_text": "",
         "collected_data": {},
         "evaluation": {},
@@ -107,5 +104,5 @@ def plan_trip_streaming(user_query, trip_duration_days):
 
 
 if __name__ == "__main__":
-    for step in plan_trip_streaming("Plan a 3-day trip to Petra", 3):
+    for step in plan_trip_streaming("Plan a 3-day trip to Petra"):
         print(step)
