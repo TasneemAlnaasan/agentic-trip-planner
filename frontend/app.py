@@ -1,8 +1,8 @@
 import sys
 import os
 import streamlit as st
-from logic.graph import plan_trip_streaming
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from logic.graph import plan_trip_streaming
 
 
 st.set_page_config(
