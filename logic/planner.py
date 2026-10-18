@@ -73,8 +73,6 @@ get_coordinates_schema = {
 
 tools = [get_weather_schema, get_places_schema, search_prices_schema, get_coordinates_schema]
 
-
-
 available_functions = {
     "get_weather": get_weather,
     "get_places": get_places,
@@ -83,6 +81,16 @@ available_functions = {
 }
 
 client = Groq(api_key=settings.groq_api_key)
+
+
+def trim_messages(messages, max_recent=10):
+
+    if len(messages) <= max_recent + 1:
+        return messages
+
+    system_msg = messages[0]
+    recent_messages = messages[-max_recent:]
+    return [system_msg] + recent_messages
 
 
 def run_planner(user_query):
@@ -110,7 +118,6 @@ def run_planner(user_query):
             function_name = tool_call.function.name
             function_args = json.loads(tool_call.function.arguments)
 
-        
             if function_name not in available_functions:
                 messages.append({
                     "role": "tool",
@@ -133,6 +140,8 @@ def run_planner(user_query):
                 "name": function_name,
                 "content": json.dumps(result)
             })
+
+        messages = trim_messages(messages)
 
         new_response = client.chat.completions.create(
             model="openai/gpt-oss-120b",
