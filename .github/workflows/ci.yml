@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-imports:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check all modules import correctly
+        env:
+          GROQ_API_KEY: "dummy-key-for-import-check"
+          TAVILY_API_KEY: "dummy-key-for-import-check"
+          GEOAPIFY_API_KEY: "dummy-key-for-import-check"
+        run: |
+          python -c "import config"
+          python -c "import tools.weather"
+          python -c "import tools.places"
+          python -c "import tools.search"
+          python -c "import tools.geocode"
+          python -c "import logic.planner"
+          python -c "import logic.evaluator"
+          python -c "import logic.graph"
